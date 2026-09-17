@@ -1,30 +1,30 @@
 # To-X-or-UI
 
-A local pass-and-play party game for 2+ players: everyone reviews the same
-UX/UI screen, privately writes up what's wrong with it, then you reveal all
-the critiques and argue about it.
+A solo UX/UI eye-test game. You're shown a real-looking product screen and a
+checklist of possible problems with it. Some are genuine UX/UI issues, some
+are decoys that sound plausible but aren't actually true of that screen.
+Check every real issue — nothing else — and find out immediately whether
+you're right.
 
 No accounts, no install, nothing leaves the browser. Built-in library of 10
 "broken" screens (checkout, sign-up, dashboard, pricing, settings, mobile
-nav, search, onboarding, product page, 404) — each with real, deliberately
-placed UX/UI problems.
+nav, search, onboarding, product page, 404), each with real, deliberately
+placed UX/UI problems and hand-written decoys.
 
 ## How to play
 
-1. **Setup** — add players (2–8), pick timer lengths, pick a screen to
-   review (or let it pick a random one each round).
-2. **Review together** — everyone looks at the same screen at once while a
-   shared timer counts down. Talk through first impressions, but don't
-   settle on an answer yet.
-3. **Write it up (private, pass the device)** — one at a time, each player
-   gets a personal timer to tag issues (Contrast, Navigation, Dark Patterns,
-   etc.) and write a short critique. Everyone else looks away — answers stay
-   hidden until the reveal.
-4. **Reveal & debate** — all critiques are shown side by side. Optionally
-   reveal the designer's own list of intentionally hidden issues as extra
-   discussion fuel.
-5. **Next round or wrap up** — play another screen with the same group, or
-   end the game and see a recap of every round played.
+1. **Pick how many screens** — 3, 5, or all 10 — and hit Start.
+2. **Look at the screen**, then check off every option in the list you
+   believe is a genuine problem with it.
+3. **Submit** — every option is instantly marked: a real issue you caught
+   (✅), a decoy you wrongly flagged (❌), a real issue you missed (⚠️), or
+   a decoy you correctly left alone. Each one comes with a short
+   explanation.
+4. **Next screen**, and so on — then a final score and rating across the
+   whole run.
+
+Scoring: your % is how many of all those true/false calls you got right,
+across every option, on every screen you played.
 
 Progress is saved automatically (to your browser only), so an accidental
 refresh or a closed tab won't lose the game in progress.
@@ -41,28 +41,23 @@ itself. Pick whichever is easiest:
   npm start
   ```
   This runs a tiny local web server on <http://localhost:3000> — open that
-  URL on the shared device. (Uses `npx serve`, downloaded on first run only.)
+  URL in a browser. (Uses `npx serve`, downloaded on first run only.)
 - **Deploy it** (e.g. to Vercel) as a static site for a shareable link — it's
-  plain HTML/CSS/JS, so no framework or build settings are needed. You'd
-  still play pass-and-play on one screen/device, same as running it locally.
-
-## Playing together
-
-This is built for **one shared device** — pass a phone, tablet, or laptop
-around the table. That's what makes the "hidden until reveal" mechanic work
-without needing separate logins or a backend.
+  plain HTML/CSS/JS, so no framework or build settings are needed.
 
 ## Files
 
 - `index.html` — page shell
 - `style.css` — all styling
-- `scenarios.js` — the 10 built-in "broken" screens + the critique tag list
-- `app.js` — game logic (state machine, timers, rendering)
+- `scenarios.js` — the 10 built-in "broken" screens, their real issues, and
+  their decoy options
+- `app.js` — game logic (state machine, scoring, rendering)
 
 ## Adding your own screens
 
-Every entry in `scenarios.js`'s `SCENARIOS` array is just a title, a chunk
-of self-contained HTML/CSS (rendered in a sandboxed iframe, so it can't
-affect the rest of the game), and an optional list of "designer's notes" —
-the intentionally hidden issues shown on request during the reveal. Copy an
-existing entry as a template.
+Every entry in `scenarios.js`'s `SCENARIOS` array has a title, a chunk of
+self-contained HTML/CSS (rendered in a sandboxed iframe, so it can't affect
+the rest of the game), and an `issues` list mixing real problems
+(`correct: true`) with decoys (`correct: false`) — each with an `explain`
+string shown at reveal. Copy an existing entry as a template; roughly 5 real
+issues and 3 decoys per screen reads well.
