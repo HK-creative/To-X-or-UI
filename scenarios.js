@@ -1,12 +1,14 @@
 /* ============================================================
    To-X-or-UI — Scenario data
    Each scenario is a fake, self-contained product screen with a
-   handful of UX/UI problems baked in on purpose. Players review
-   the SAME screen, then write up what's wrong with it.
+   handful of real UX/UI problems baked in on purpose, plus a set
+   of decoy "issues" that sound plausible but are not actually true
+   of this screen. The player checks off every option they believe
+   is a real problem; each one is scored true/false.
    ============================================================ */
 
-// Generic critique categories players can tag their answer with.
-// These are heuristics, not scenario-specific "correct answers".
+// Heuristic categories used to label the *real* issues in the reveal.
+// Purely descriptive — not shown for decoy options.
 const TAGS = [
   { id: 'hierarchy',   label: 'Visual Hierarchy' },
   { id: 'contrast',    label: 'Contrast & Readability' },
@@ -68,12 +70,15 @@ const SCENARIOS = [
         </div>
       </div>
     `),
-    notes: [
-      { tag: 'trust',       text: 'A "processing & handling fee" appears out of nowhere at the final step, in near-invisible light gray — classic surprise-fees dark pattern.' },
-      { tag: 'darkpattern', text: 'Auto-renewal / subscription terms are disclosed in 10px near-white text most people will never read.' },
-      { tag: 'cta',         text: '"Place Order" is styled like a disabled button (gray on gray) even though it should be clickable — people will assume the form is incomplete and hesitate or give up.' },
-      { tag: 'copy',        text: 'Field values ("4242 4242...", "Enter code") are styled as light gray text indistinguishable from placeholder vs. real input — unclear if anything was actually typed.' },
-      { tag: 'nav',         text: '"Back to shipping" looks like a small, low-priority link — going back likely risks losing entered payment info with no warning.' },
+    issues: [
+      { correct: true, tag: 'trust',       text: 'A "processing & handling fee" appears out of nowhere at the final step, in near-invisible light gray.', explain: 'Real issue — classic surprise-fee dark pattern, and it\'s styled to be as unnoticeable as possible.' },
+      { correct: true, tag: 'darkpattern', text: 'Auto-renewal / subscription terms are disclosed in 10px near-white text most people will never read.' , explain: 'Real issue — the terms that matter most are the hardest to see on the page.' },
+      { correct: true, tag: 'cta',         text: '"Place Order" is styled like a disabled button even though it should be clickable.', explain: 'Real issue — gray-on-gray reads as "not ready yet," which makes people hesitate or abandon.' },
+      { correct: true, tag: 'copy',        text: 'Field values are styled as light gray text, indistinguishable from placeholder vs. real input.', explain: 'Real issue — it\'s genuinely unclear whether anything was actually typed into these fields.' },
+      { correct: true, tag: 'nav',         text: '"Back to shipping" looks like a low-priority link that risks losing entered payment info with no warning.', explain: 'Real issue — a destructive-ish navigation action given no visual weight or confirmation.' },
+      { correct: false, text: 'There is no progress indicator showing what step of checkout you\'re on.', explain: 'Not true — Cart / Shipping / Payment / Done is right at the top.' },
+      { correct: false, text: 'The page gives no way to see an order summary or subtotal before paying.', explain: 'Not true — Subtotal and Total are both shown clearly above the button.' },
+      { correct: false, text: 'The total price is hidden until after the order is placed.', explain: 'Not true — the $48.50 total is displayed plainly before you click anything.' },
     ],
   },
 
@@ -103,12 +108,15 @@ const SCENARIOS = [
         <div style="text-align:center;margin-top:16px;font-size:12px;color:#bbb;">Already have an account? <span style="color:#bbb;">Log in</span></div>
       </div>
     `),
-    notes: [
-      { tag: 'feedback',   text: 'The password field is flagged red with just the word "Error" — no explanation of what requirement failed or how to fix it.' },
-      { tag: 'darkpattern',text: 'The consent checkbox bundles marketing emails, partner offers, and legally-required Terms/Privacy agreement into one pre-checked box.' },
-      { tag: 'contrast',   text: 'Field labels double as placeholder text in very light gray, so users lose the label the moment they start typing.' },
-      { tag: 'cta',        text: 'The "Sign Up" button and the "Log in" link are both styled in the same washed-out gray as disabled elements — nothing signals which action is primary.' },
-      { tag: 'a11y',       text: 'Error state relies on color (red border) alone, with a one-word message too small/faint to be read by low-vision users.' },
+    issues: [
+      { correct: true, tag: 'feedback',    text: 'The password field is flagged red with just the word "Error" — no explanation of what to fix.', explain: 'Real issue — a bare "Error" tells the user nothing actionable.' },
+      { correct: true, tag: 'darkpattern', text: 'The consent checkbox bundles marketing emails and partner offers together with the required Terms/Privacy agreement.', explain: 'Real issue — pre-checked, bundled consent is a textbook dark pattern.' },
+      { correct: true, tag: 'contrast',    text: 'Field labels double as placeholder text, so users lose the label the moment they start typing.', explain: 'Real issue — no persistent label means users can forget what a field was for mid-entry.' },
+      { correct: true, tag: 'cta',         text: 'The "Sign Up" button and the "Log in" link are styled in the same washed-out gray as disabled elements.', explain: 'Real issue — nothing visually signals which action is primary.' },
+      { correct: true, tag: 'a11y',        text: 'The error state relies on a red border and one faint word, with no icon or clearer text for low-vision users.', explain: 'Real issue — color-only, low-contrast error signaling fails accessibility basics.' },
+      { correct: false, text: 'The form doesn\'t ask for an email address at all.', explain: 'Not true — there\'s a dedicated "Email address" field.' },
+      { correct: false, text: 'There is no password field — only plain text inputs.', explain: 'Not true — a password field is present (it\'s just styled like the others).' },
+      { correct: false, text: 'The "Log in" link for existing users is missing from the page.', explain: 'Not true — it\'s there at the bottom, just very low-contrast.' },
     ],
   },
 
@@ -141,12 +149,15 @@ const SCENARIOS = [
         </div>
       </div>
     `, `body{overflow:hidden;}`),
-    notes: [
-      { tag: 'nav',        text: 'Five icon-only tabs with no text labels and no obvious meaning (a diamond? a rounded square?) — users must guess or tap-and-check.' },
-      { tag: 'a11y',       text: 'Tap targets are ~22px with almost no spacing between them — well under the ~44px recommended minimum touch target.' },
-      { tag: 'hierarchy',  text: 'The active tab (dark square) is barely distinguishable from inactive tabs (light gray) at a glance, especially in bright light.' },
-      { tag: 'contrast',   text: 'The notification badge is a pale pink dot on white — very low contrast, easy to miss entirely.' },
-      { tag: 'consistency',text: 'Icon shapes are inconsistent (circle, diamond, squares) suggesting different metaphors with no unifying visual language.' },
+    issues: [
+      { correct: true, tag: 'nav',         text: 'Five icon-only tabs with no text labels and no obvious meaning.', explain: 'Real issue — users must guess or tap-and-check what each icon does.' },
+      { correct: true, tag: 'a11y',        text: 'Tap targets are roughly 22px with almost no spacing between them.', explain: 'Real issue — well under the ~44px recommended minimum touch target.' },
+      { correct: true, tag: 'hierarchy',   text: 'The active tab is barely distinguishable from inactive tabs at a glance.', explain: 'Real issue — dark vs. light gray is a weak signal, especially in bright light.' },
+      { correct: true, tag: 'contrast',    text: 'The notification badge is a pale pink dot on white.', explain: 'Real issue — very low contrast, easy to miss entirely.' },
+      { correct: true, tag: 'consistency', text: 'Icon shapes are inconsistent (circle, diamond, squares) with no unifying visual language.', explain: 'Real issue — mixed metaphors make the nav harder to learn.' },
+      { correct: false, text: 'The Steps and Calories cards use completely different fonts and styles from each other.', explain: 'Not true — both cards share the same consistent card style.' },
+      { correct: false, text: 'There\'s no way to see today\'s stats at all on this screen.', explain: 'Not true — Steps and Calories are both shown right at the top.' },
+      { correct: false, text: 'The bottom navigation bar overlaps and covers the content above it.', explain: 'Not true — it sits in its own fixed bar below the content, not overlapping it.' },
     ],
   },
 
@@ -194,12 +205,15 @@ const SCENARIOS = [
         </table>
       </div>
     `),
-    notes: [
-      { tag: 'hierarchy',  text: 'All four KPI tiles and the chart compete for attention equally — nothing tells the viewer which number matters most right now.' },
-      { tag: 'copy',       text: 'The chart legend is outsourced to "see report page 4" instead of being shown next to the data it explains.' },
-      { tag: 'consistency',text: 'Bar colors appear to be random/rainbow rather than tied to a consistent meaning across the dashboard.' },
-      { tag: 'cogload',    text: 'A dense, unstyled table of raw account IDs and statuses is dropped in with no grouping, sorting affordance, or visual separation (no zebra striping).' },
-      { tag: 'a11y',       text: 'Status meaning is conveyed only by background color tint (red/green/blue/yellow tiles) with no icon or text cue for colorblind users.' },
+    issues: [
+      { correct: true, tag: 'hierarchy',   text: 'All four KPI tiles and the chart compete for attention equally.', explain: 'Real issue — nothing tells the viewer which number matters most right now.' },
+      { correct: true, tag: 'copy',        text: 'The chart legend is outsourced to "see report page 4" instead of being shown next to the data.', explain: 'Real issue — the explanation the chart needs isn\'t actually on the chart.' },
+      { correct: true, tag: 'consistency', text: 'Bar colors appear to be random rather than tied to a consistent meaning.', explain: 'Real issue — rainbow bars with no legend give color no real function.' },
+      { correct: true, tag: 'cogload',     text: 'A dense, unstyled table of raw account data is dropped in with no grouping or visual separation.', explain: 'Real issue — no zebra striping, sorting affordance, or headers to help scan it.' },
+      { correct: true, tag: 'a11y',        text: 'Status meaning is conveyed only by background color tint, with no icon or text cue.', explain: 'Real issue — colorblind users lose the signal entirely.' },
+      { correct: false, text: 'The dashboard uses light gray text throughout, making the key numbers hard to read.', explain: 'Not true — the KPI numbers themselves are bold and dark, clearly legible.' },
+      { correct: false, text: 'The Revenue figure isn\'t visible without scrolling down the page.', explain: 'Not true — it\'s the very first tile, visible immediately.' },
+      { correct: false, text: 'All four KPI tiles use the exact same color with no visual differentiation.', explain: 'Not true — each tile has a distinct red/green/blue/yellow tint.' },
     ],
   },
 
@@ -235,12 +249,15 @@ const SCENARIOS = [
         <div style="text-align:center;font-size:10px;color:#ccc;margin-top:18px;">Plans renew automatically each month at the listed rate until cancelled in account settings.</div>
       </div>
     `),
-    notes: [
-      { tag: 'cta',        text: 'All three "Choose" buttons are identical in style — nothing visually pushes people toward the recommended "Pro" plan despite the badge.' },
-      { tag: 'copy',       text: 'Prices show only a bare number ("9", "29", "79") with no currency symbol or "/month" — ambiguous and easy to misread.' },
-      { tag: 'hierarchy',  text: 'The "Most Popular" ribbon badge overlaps the card corner awkwardly and is easy to miss against the plan content.' },
-      { tag: 'darkpattern',text: 'Auto-renewal terms are in barely-visible 10px near-white text at the very bottom, unlikely to be read before purchase.' },
-      { tag: 'consistency',text: 'Feature lists are inconsistent in depth (one line vs. detailed) making plans hard to compare side by side.' },
+    issues: [
+      { correct: true, tag: 'cta',         text: 'All three "Choose" buttons are identical in style.', explain: 'Real issue — nothing visually pushes people toward the recommended plan despite the badge.' },
+      { correct: true, tag: 'copy',        text: 'Prices show only a bare number with no currency symbol or "/month".', explain: 'Real issue — ambiguous and easy to misread.' },
+      { correct: true, tag: 'hierarchy',   text: 'The "Most Popular" ribbon badge overlaps the card corner awkwardly.', explain: 'Real issue — easy to miss against the plan content it\'s meant to highlight.' },
+      { correct: true, tag: 'darkpattern', text: 'Auto-renewal terms are in barely-visible near-white text at the very bottom.', explain: 'Real issue — unlikely to be read before purchase.' },
+      { correct: true, tag: 'consistency', text: 'Feature lists are inconsistent in depth, making plans hard to compare.', explain: 'Real issue — one line per plan doesn\'t give enough to compare fairly.' },
+      { correct: false, text: 'There\'s no visual indicator anywhere for which plan is recommended.', explain: 'Not true — there is a "Most Popular" badge (it\'s just poorly placed).' },
+      { correct: false, text: 'The three plans are stacked in a single column, hard to compare side by side.', explain: 'Not true — they\'re laid out side by side in a row.' },
+      { correct: false, text: 'None of the plans display a price.', explain: 'Not true — each card shows a number (9 / 29 / 79).' },
     ],
   },
 
@@ -274,12 +291,15 @@ const SCENARIOS = [
         </div>
       </div>
     `),
-    notes: [
-      { tag: 'a11y',       text: 'Both toggles use gray-on-gray for on/off — the only difference is the knob position (left vs. right), invisible to colorblind users and hard to scan quickly.' },
-      { tag: 'hierarchy',  text: '"Save changes" and "Delete account" sit side by side with nearly equal visual weight, one accidental misclick away from an irreversible action.' },
-      { tag: 'feedback',   text: 'No confirmation step or "are you sure?" dialog implied before a destructive account deletion.' },
-      { tag: 'cogload',    text: 'Unrelated settings (notifications, security, privacy, beta flags) are dumped into one flat list with no section grouping or headers.' },
-      { tag: 'consistency',text: 'It is unclear from the mockup alone which toggle state (left/right, light/dark) actually means "on" — the pattern is not self-evident.' },
+    issues: [
+      { correct: true, tag: 'a11y',        text: 'Both toggle states use gray-on-gray — only the knob position differs.', explain: 'Real issue — invisible to colorblind users and hard to scan quickly.' },
+      { correct: true, tag: 'hierarchy',   text: '"Save changes" and "Delete account" sit side by side with nearly equal visual weight.', explain: 'Real issue — one accidental misclick away from an irreversible action.' },
+      { correct: true, tag: 'feedback',    text: 'There\'s no confirmation step implied before a destructive account deletion.', explain: 'Real issue — no "are you sure?" safety net for a permanent action.' },
+      { correct: true, tag: 'cogload',     text: 'Unrelated settings are dumped into one flat list with no section grouping.', explain: 'Real issue — notifications, security, privacy, and beta flags all read as equally important.' },
+      { correct: true, tag: 'consistency', text: 'It\'s unclear from the toggle styling alone which state actually means "on."', explain: 'Real issue — the on/off pattern isn\'t self-evident without more visual contrast.' },
+      { correct: false, text: 'The page has no way to toggle any settings — only static text.', explain: 'Not true — there are working toggle switches for each setting.' },
+      { correct: false, text: '"Delete account" is hidden off-screen and requires scrolling to find.', explain: 'Not true — it sits immediately visible next to "Save changes."' },
+      { correct: false, text: 'There is no button to save your changes.', explain: 'Not true — a "Save changes" button is right there.' },
     ],
   },
 
@@ -320,12 +340,15 @@ const SCENARIOS = [
         </div>
       </div>
     `),
-    notes: [
-      { tag: 'nav',        text: 'Filters live behind an unlabeled gray square icon with no hint that filtering is even possible.' },
-      { tag: 'feedback',   text: 'No indication anywhere of which filters or sort option are currently active beyond a faint "Sort: Best" chip.' },
-      { tag: 'hierarchy',  text: 'Price is the only strongly emphasized element per result — duration, stops, and airline reputation get equal tiny gray text despite differing importance to the decision.' },
-      { tag: 'a11y',       text: 'Pagination controls are tiny, low-contrast, and sit disconnected from the results with generous whitespace, making them easy to overlook or mis-tap.' },
-      { tag: 'copy',       text: '"Sort: Best" doesn\'t explain what "Best" is optimizing for (price? duration? a mix?), and there\'s no visible way to change it in this view.' },
+    issues: [
+      { correct: true, tag: 'nav',         text: 'Filters live behind an unlabeled gray square icon with no hint filtering is possible.', explain: 'Real issue — nothing signals that this control does anything.' },
+      { correct: true, tag: 'feedback',    text: 'There\'s no indication of which filters or sort option are currently active.', explain: 'Real issue — the faint "Sort: Best" chip is easy to overlook and unconfirmed.' },
+      { correct: true, tag: 'hierarchy',   text: 'Price is the only strongly emphasized element per result; duration and stops are tiny gray text.', explain: 'Real issue — factors that matter to the decision are visually buried.' },
+      { correct: true, tag: 'a11y',        text: 'Pagination controls are tiny, low-contrast, and disconnected from the results.', explain: 'Real issue — easy to overlook or mis-tap.' },
+      { correct: true, tag: 'copy',        text: '"Sort: Best" doesn\'t explain what "Best" is optimizing for.', explain: 'Real issue — ambiguous criteria with no visible way to change it.' },
+      { correct: false, text: 'The search results show zero flights — an empty results list.', explain: 'Not true — two flight options are listed.' },
+      { correct: false, text: 'There is no price shown for either flight option.', explain: 'Not true — $612 and $401 are both displayed prominently.' },
+      { correct: false, text: 'The page provides no way to sort or filter results at all.', explain: 'Not true — a sort chip and a filter icon both exist (they\'re just poorly surfaced, not absent).' },
     ],
   },
 
@@ -350,12 +373,15 @@ const SCENARIOS = [
         </div>
       </div>
     `),
-    notes: [
-      { tag: 'copy',       text: 'A dense wall of jargon-heavy text ("block-based system", "bi-directional links", "graph view") front-loaded before the user has done anything in the app yet.' },
-      { tag: 'cta',        text: '"Skip" is bold and dark while "Continue" (the intended primary path) is faint outlined gray — visually inverted priority nudges people to bail on setup.' },
-      { tag: 'nav',        text: 'No visible way to go back to a previous step, and the progress dots don\'t indicate how many steps remain in total.' },
-      { tag: 'cogload',    text: 'Explaining four different concepts (blocks, links, tags, graph view) on a single onboarding screen before any hands-on interaction.' },
-      { tag: 'hierarchy',  text: 'The step indicator, heading, paragraph, and actions all sit with similar spacing/weight, giving no visual anchor for what to do next.' },
+    issues: [
+      { correct: true, tag: 'copy',        text: 'A dense wall of jargon-heavy text is front-loaded before the user has done anything yet.', explain: 'Real issue — "block-based," "bi-directional links," and "graph view" all at once, day one.' },
+      { correct: true, tag: 'cta',         text: '"Skip" is bold and dark while "Continue" is faint outlined gray.', explain: 'Real issue — visually inverted priority nudges people to bail on setup.' },
+      { correct: true, tag: 'nav',         text: 'There\'s no visible way to go back to a previous step.', explain: 'Real issue — and the progress dots don\'t indicate how many steps remain in total.' },
+      { correct: true, tag: 'cogload',     text: 'Four different concepts are explained on a single onboarding screen before any hands-on interaction.', explain: 'Real issue — too much to absorb before the user has touched anything.' },
+      { correct: true, tag: 'hierarchy',   text: 'The heading, paragraph, and actions all sit with similar spacing and weight.', explain: 'Real issue — no visual anchor for what to do next.' },
+      { correct: false, text: 'There is no way to continue or proceed from this screen.', explain: 'Not true — a Continue option exists (it\'s just visually weak).' },
+      { correct: false, text: 'The screen is fully blank, with no text or instructions at all.', explain: 'Not true — there\'s a heading and a full paragraph of copy.' },
+      { correct: false, text: 'There\'s no progress indicator showing onboarding steps at all.', explain: 'Not true — progress dots are shown (they just don\'t convey total step count well).' },
     ],
   },
 
@@ -383,12 +409,15 @@ const SCENARIOS = [
         </div>
       </div>
     `),
-    notes: [
-      { tag: 'darkpattern',text: 'A red urgency banner stacks two manufactured-scarcity claims ("Only 2 left!" and "47 people viewing") that are unverifiable and commonly fabricated.' },
-      { tag: 'copy',       text: 'The strikethrough math doesn\'t add up cleanly ($68 → $52 is ~24% off, but the badge says "save 15%") — an easy trust-breaking inconsistency.' },
-      { tag: 'nav',        text: '"Reviews (128)" is styled as plain gray text, not visually distinct as a tappable link to jump to review content.' },
-      { tag: 'responsive', text: 'The Add to Cart button is pushed far down after a large empty gap — on a real phone this would likely sit below the fold, requiring scrolling to purchase.' },
-      { tag: 'hierarchy',  text: 'Thumbnail images overlap each other slightly with negative margin, making the gallery look broken rather than intentionally styled.' },
+    issues: [
+      { correct: true, tag: 'darkpattern', text: 'A red urgency banner stacks two unverifiable manufactured-scarcity claims.', explain: 'Real issue — "Only 2 left!" and "47 people viewing" together, both commonly fabricated.' },
+      { correct: true, tag: 'copy',        text: 'The strikethrough math doesn\'t line up with the "save 15%" badge.', explain: 'Real issue — $68→$52 is closer to 24% off, not 15% — an easy trust-breaking inconsistency.' },
+      { correct: true, tag: 'nav',         text: '"Reviews (128)" is styled as plain gray text, not visually distinct as a tappable link.', explain: 'Real issue — nothing marks it as clickable.' },
+      { correct: true, tag: 'responsive',  text: 'The Add to Cart button sits after a large empty gap, likely pushed below the fold.', explain: 'Real issue — on a real phone this would require scrolling just to buy.' },
+      { correct: true, tag: 'hierarchy',   text: 'Thumbnail images overlap each other slightly with negative margin.', explain: 'Real issue — reads as a layout bug rather than an intentional gallery style.' },
+      { correct: false, text: 'The product has no price shown anywhere on the page.', explain: 'Not true — $68 and $52 are both clearly shown.' },
+      { correct: false, text: 'There is no Add to Cart button on this page at all.', explain: 'Not true — the button exists, it\'s just positioned poorly.' },
+      { correct: false, text: 'The image gallery has no thumbnails, only the main photo.', explain: 'Not true — three thumbnails are shown beneath the main image.' },
     ],
   },
 
@@ -402,12 +431,15 @@ const SCENARIOS = [
         <div style="font-size:13px;color:#bbb;font-family:monospace;">Error 404: resource not found at /api/v2/page?id=undefined</div>
       </div>
     `),
-    notes: [
-      { tag: 'trust',      text: 'No branding, logo, or any visual continuity with the rest of the product — it\'s unclear the user is even still on the same site.' },
-      { tag: 'copy',       text: 'The message exposes raw technical/API details ("/api/v2/page?id=undefined") to end users instead of a plain-language explanation.' },
-      { tag: 'nav',        text: 'There is no link back to the homepage, no search box, and no suggested next step — a dead end.' },
-      { tag: 'feedback',   text: 'Nothing distinguishes "you mistyped a URL" from "something broke on our end" — same generic message either way.' },
-      { tag: 'a11y',       text: 'Low-contrast light gray text on white for the only content on the page, with no heading structure at all.' },
+    issues: [
+      { correct: true, tag: 'trust',    text: 'There\'s no branding, logo, or visual continuity with the rest of the product.', explain: 'Real issue — it\'s unclear the user is even still on the same site.' },
+      { correct: true, tag: 'copy',     text: 'The message exposes raw technical/API details to end users.', explain: 'Real issue — "/api/v2/page?id=undefined" means nothing to a normal visitor.' },
+      { correct: true, tag: 'nav',      text: 'There is no link back to the homepage, no search box, and no suggested next step.', explain: 'Real issue — a complete dead end.' },
+      { correct: true, tag: 'feedback', text: 'Nothing distinguishes "you mistyped a URL" from "something broke on our end."', explain: 'Real issue — same generic message either way.' },
+      { correct: true, tag: 'a11y',     text: 'Low-contrast light gray text is the only content on the page, with no heading structure.', explain: 'Real issue — hard to read and offers no semantic structure.' },
+      { correct: false, text: 'The page displays a large, colorful illustration of a broken robot or similar mascot.', explain: 'Not true — there\'s no illustration at all, just a line of text.' },
+      { correct: false, text: 'There\'s a search bar prominently placed to help users find what they need.', explain: 'Not true — no search bar exists on this page.' },
+      { correct: false, text: 'The error message is written in large, bold, high-contrast black text.', explain: 'Not true — it\'s small, light gray, monospace text.' },
     ],
   },
 ];
